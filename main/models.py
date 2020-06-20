@@ -6,3 +6,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     paid = models.CharField(max_length=5)
     avator = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.user} - {self.paid}"
