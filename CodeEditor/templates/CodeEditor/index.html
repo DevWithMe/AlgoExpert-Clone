@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 85px; overflow-y: auto;">
+          <h1>Question</h1>
+        </div>
+        <form id="codeEditor" action="/problems/compile/">
+            <textarea id="code" class="col-5 ang-python" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code"></textarea>
+            <input type="hidden" value="1" name="problem">
+            <button type="submit">Check code</button>
+        </form>
+      </div>
+      <br>
+      <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px;">
+        <div style="margin-left: 25px">         <h1>Test <button type="button" class="btn btn-success">Submit Code</button></h1>
+        </div>
+      </div>
+    <script>
+        $(document).ready(function() {
+            $('textarea').keydown(function(e){
+                if(e.keyCode === 9) {
+                    var start = this.selectionStart;
+                    var end = this.selectionEnd;
+                    var $this = $(this);
+                    var value = $this.val();
+                    $this.val(value.substring(0, start) + '\t' + value.substring(end));
+                    this.selectionStart = this.selectionEnd = start + 1;
+                    e.preventDefault();
+                }
+            });
+
+            /*$("#codeEditor").submit(function(e) {
+                e.preventDefault();
+                console.log(document.getElementById("code").value)
+            });*/
+        });
+
+
+    </script>
+</body>
+</html>

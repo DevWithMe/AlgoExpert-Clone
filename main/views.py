@@ -6,8 +6,8 @@ from .models import Profile
 import requests
 from django.urls import reverse
 
-GITHUB_OAUTH_ID = ""
-GITHUB_OAUTH_SECRET = ""
+GITHUB_OAUTH_ID = "9bbd97ddc2cda3583dcd"
+GITHUB_OAUTH_SECRET = "08bdac333b3c1fea74115e8551ffd96649a39890"
 
 # Create your views here.
 def index(request):
