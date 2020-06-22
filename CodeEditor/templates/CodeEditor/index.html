@@ -12,19 +12,20 @@
         <div class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 85px; overflow-y: auto;">
           <h1>Question</h1>
         </div>
-        <form id="codeEditor" action="/problems/compile/">
-            <textarea id="code" class="col-5 ang-python" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code"></textarea>
-            <input type="hidden" value="1" name="problem">
-            <button type="submit">Check code</button>
-        </form>
+        <textarea id="codeEditor" class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code"></textarea>
       </div>
       <br>
-      <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px;">
-        <div style="margin-left: 25px">         <h1>Test <button type="button" class="btn btn-success">Submit Code</button></h1>
+        <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px;">
+            <div style="margin-left: 25px">
+                <h1>Test
+                    <button type="button" class="btn btn-success" id="submit-button">Submit Code</button>
+                    <button type="button" class="btn btn-primary" id="check-button">Check Code</button>
+                </h1>
+            </div>
         </div>
-      </div>
     <script>
         $(document).ready(function() {
+
             $('textarea').keydown(function(e){
                 if(e.keyCode === 9) {
                     var start = this.selectionStart;
@@ -37,10 +38,23 @@
                 }
             });
 
-            /*$("#codeEditor").submit(function(e) {
-                e.preventDefault();
-                console.log(document.getElementById("code").value)
-            });*/
+            $("#submit-button").click(function(event) {
+                console.log(document.getElementById("codeEditor").value);
+                var data = encodeURIComponent(document.getElementById('codeEditor').value);
+                $.ajax({
+                    url: `/problems/compile/?code=${data}`,
+                    type: "get",
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        console.log(data)
+                    },
+                    error: function(xhr) {
+                        console.log("error" + xhr.status);
+                    }
+                })
+            })
+
         });
 
 
