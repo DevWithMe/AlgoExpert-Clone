@@ -1,2 +1,2 @@
-def nth_fib(n):
-	return 1
+def hi():
+	print"hij"

@@ -12,17 +12,16 @@
         <div class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 85px; overflow-y: auto;">
           <h1>Question</h1>
         </div>
-        <textarea id="codeEditor" class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code"></textarea>
+        <textarea id="codeEditor" class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code">{{ exist.code }}</textarea>
       </div>
       <br>
-        <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px; overflow-y: auto;" id="output">
-            <div style="margin-left: 25px">
-                <h1>Test
-                    <button type="button" class="btn btn-success" id="submit-button">Submit Code</button>
-                    <button type="button" class="btn btn-primary" id="check-button">Check Code</button>
-                </h1>
-            </div>
-        </div>
+      <button type="button" class="btn btn-success" id="submit-button" style="margin-left: 800px">Submit Code</button>
+      <button type="button" class="btn btn-primary" id="check-button" style="margin-left: 25px">Check Code</button>
+      <br>
+      <br>
+    <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px; overflow-y: auto;" id="output">
+        <h1>Output</h1>
+    </div>
     <script>
         $(document).ready(function() {
 
@@ -38,14 +37,16 @@
                 }
             });
 
-            $("#submit-button").click(function(event) {
+            $("#check-button").click(function(event) {
                 var data = encodeURIComponent(document.getElementById('codeEditor').value);
+                document.getElementById("output").innerHTML = "<h1>Loading...</h1>"
                 $.ajax({
                     url: `/problems/compile/?code=${data}`,
                     type: "get",
                     processData: false,
                     contentType: false,
                     success: function(data) {
+                        document.getElementById("output").innerHTML = "<h1>Output</h1>"
                         var errors = data["error"]
                         var input = data["input"]
                         var output = document.getElementById("output")
@@ -56,10 +57,42 @@
                             } else {
                                 div.innerHTML = `<br><h4 style="color: green;">Test Case ${key}</h4> - <p style="color: green">${errors[key]}</p><br>`
                             }
-                            output.appendChild(div)
+                            output.appendChild(div);
                         }
                     },
                     error: function(xhr) {
+                        document.getElementById("output").innerHTML += "<br><h1>Oops, there's an error. Please try to refresh to see if it would work, otherwise please report a bug report. Sorry for the inconvenience</h1>"
+                        console.log("error" + xhr.status);
+                    }
+                })
+            });
+
+            $("#submit-button").click(function(event) {
+                var data = encodeURIComponent(document.getElementById('codeEditor').value);
+                document.getElementById("output").innerHTML = "<h1>Loading...</h1>"
+                $.ajax({
+                    url: `/problems/compile/?code=${data}&problem=1`,
+                    type: "get",
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        document.getElementById("output").innerHTML = "<h1>Output</h1>"
+                        var errors = data["error"]
+                        var input = data["input"]
+                        var output = document.getElementById("output");
+                        var passed = true
+                        for (let key in errors) {
+                            if (errors[key] != "passed") {
+                                output.innerHTML = "<h1 style='color: red;'>You didn't pass at least 1 test, click run code button to check your output.</h1>"
+                                passed = false
+                            }
+                        }
+                        if (passed === true) {
+                            output.innerHTML = "<h1 style='color: green;'>Congratulation on finishing this problem!</h1>"
+                        }
+                    },
+                    error: function(xhr) {
+                        document.getElementById("output").innerHTML += "<br><h1>Oops, there's an error. Please try to refresh to see if it would work, otherwise please report a bug report. Sorry for the inconvenience</h1>"
                         console.log("error" + xhr.status);
                     }
                 })
