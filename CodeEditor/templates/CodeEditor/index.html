@@ -15,7 +15,7 @@
         <textarea id="codeEditor" class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code"></textarea>
       </div>
       <br>
-        <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px;">
+        <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px; overflow-y: auto;" id="output">
             <div style="margin-left: 25px">
                 <h1>Test
                     <button type="button" class="btn btn-success" id="submit-button">Submit Code</button>
@@ -39,7 +39,6 @@
             });
 
             $("#submit-button").click(function(event) {
-                console.log(document.getElementById("codeEditor").value);
                 var data = encodeURIComponent(document.getElementById('codeEditor').value);
                 $.ajax({
                     url: `/problems/compile/?code=${data}`,
@@ -47,14 +46,24 @@
                     processData: false,
                     contentType: false,
                     success: function(data) {
-                        console.log(data)
+                        var errors = data["error"]
+                        var input = data["input"]
+                        var output = document.getElementById("output")
+                        for (let key in errors) {
+                            var div = document.createElement("DIV")
+                            if (errors[key] != "passed") {
+                                div.innerHTML = `<br><h4 style="color: red;">Test Case ${key}</h4> - <p style="color: red;">${errors[key]}</p><br>`
+                            } else {
+                                div.innerHTML = `<br><h4 style="color: green;">Test Case ${key}</h4> - <p style="color: green">${errors[key]}</p><br>`
+                            }
+                            output.appendChild(div)
+                        }
                     },
                     error: function(xhr) {
                         console.log("error" + xhr.status);
                     }
                 })
-            })
-
+            });
         });
 
 

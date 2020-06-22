@@ -19,10 +19,20 @@ def run_code(request):
     stdout, stderr = out.communicate()
     data = str(stdout).split("======================================================================")
 
-    messages = {}
+    response = {
+        "error": {}, # test_# : error message / passed,
+        "input": {"1": 2, "2": 9, 3: "random", 4: "random", 5: "random", 6: "random", 7: "random"}
+    }
     for i in range(1, len(data)):
-        messages[i-1] = ("<br />".join(data[i].split("\\n")).split("----------------------------------------------------------------------")[1])
+        info = ("<br />".join(data[i].split("\\n")).split("----------------------------------------------------------------------")[1])
+        number = int(info.split("test_")[1][0])
+        response["error"][number] = info
+        # print(colored(info, "green"))
         # return HttpResponse(data[3])
-    print(stdout)
-    return JsonResponse(data=messages, safe=False)
+    for i in range(1, 8):
+        try:
+            response["error"][i]
+        except KeyError:
+            response["error"][i] = "passed"
+    return JsonResponse(data=response)
 
