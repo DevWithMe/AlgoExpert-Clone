@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from subprocess import Popen
 import subprocess
 from termcolor import colored
-from .models import Code
+from .models import Code, Passed
 from django.contrib.auth.decorators import login_required
 
 
@@ -33,7 +33,6 @@ def run_code(request):
         code_.save()
 
     solution = open("solution.py", mode="w")
-    print(colored(code, "red"))
     solution.write(code)
     solution.close()
     out = Popen(["python3", "test.py"], stdout=subprocess.PIPE,  stderr=subprocess.STDOUT)
@@ -51,8 +50,6 @@ def run_code(request):
         info = ("<br />".join(data[i].split("\\n")).split("----------------------------------------------------------------------")[1])
         number = int(info.split("test_")[1][0])
         response["error"][number] = info
-        # print(colored(info, "green"))
-        # return HttpResponse(data[3])
     for i in range(1, 8):
         try:
             response["error"][i]
@@ -62,5 +59,16 @@ def run_code(request):
     if b"SyntaxError" in stdout or b"NameError" in stdout:
         for i in range(1, 8):
             response["error"][i] = "Possible SyntaxError"
+
+    passed = True
+    for i in response["error"]:
+        if response["error"][i] != "passed":
+            passed = False
+
+    try:
+        exist = Passed.objects.get(user_id=request.user.id, problem_id=problem)
+    except:
+        passed = Passed(user_id=request.user.id, problem_id=problem)
+        passed.save()
 
     return JsonResponse(data=response)

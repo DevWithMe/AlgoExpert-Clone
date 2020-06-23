@@ -7,5 +7,7 @@ class Code(models.Model):
     problem_id = models.IntegerField()
     code = models.TextField()
 
-"""class Passed(models.Model):
-    pass # user_id, problem, solved"""
+class Passed(models.Model):
+    # user_id, problem
+    user_id = models.IntegerField()
+    problem_id = models.IntegerField()
