@@ -11,6 +11,23 @@
                     document.getElementById("main").innerHTML = text;
                 })
             }
+
+            function problem() {
+                fetch("/api/problems")
+                .then(response => response.json())
+                .then(problems => {
+                    console.log(problems);
+                    for (let i=0; i<problems.length; i++) {
+                        var div = document.createElement('DIV');
+                        if (problems[i]["complete"] === "True") {
+                            div.innerHTML = `<a href="/problems/${problems[i]["id"]}/"><h1>${problems[i]["title"]} (completed)</h1></a>`
+                        } else {
+                            div.innerHTML = `<a href="/problems/${problems[i]["id"]}/"><h1>${problems[i]["title"]}</h1></a>`
+                        }
+                        document.getElementById("main").appendChild(div)
+                    }
+                })
+            }
         </script>
     </head>
     <body>
@@ -30,7 +47,7 @@
                         <a class="nav-link" onclick="return displayInfo('home');" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" onclick="return displayInfo('problem');" href="#">Problems</a>
+                        <a class="nav-link" onclick="return problem('problem');" href="#">Problems</a>
                     </li>
                 </ul>
                 <!--<a class="nav-link" onclick="displayInfo('problem');" href="">Problems</a>-->

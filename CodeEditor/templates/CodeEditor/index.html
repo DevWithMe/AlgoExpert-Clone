@@ -10,9 +10,10 @@
 <body>
     <div class="row">
         <div class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 85px; overflow-y: auto;">
-          <h1>Question</h1>
+          <h1>{{ title }}</h1>
+            {{ description }}
         </div>
-        <textarea id="codeEditor" class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code">{{ exist.code }}</textarea>
+        <textarea id="codeEditor" class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code">{{ exist.code }}{{ starter }}</textarea>
       </div>
       <br>
       <button type="button" class="btn btn-success" id="submit-button" style="margin-left: 800px">Submit Code</button>
@@ -41,7 +42,7 @@
                 var data = encodeURIComponent(document.getElementById('codeEditor').value);
                 document.getElementById("output").innerHTML = "<h1>Loading...</h1>"
                 $.ajax({
-                    url: `/problems/compile/?code=${data}`,
+                    url: `/problems/compile/?code=${data}&problem={{ id }}`,
                     type: "get",
                     processData: false,
                     contentType: false,
@@ -71,7 +72,7 @@
                 var data = encodeURIComponent(document.getElementById('codeEditor').value);
                 document.getElementById("output").innerHTML = "<h1>Loading...</h1>"
                 $.ajax({
-                    url: `/problems/compile/?code=${data}&problem=1`,
+                    url: `/problems/compile/?code=${data}&problem={{ id }}`,
                     type: "get",
                     processData: false,
                     contentType: false,
