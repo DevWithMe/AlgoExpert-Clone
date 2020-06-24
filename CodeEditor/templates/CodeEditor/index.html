@@ -45,7 +45,7 @@
                 var data = encodeURIComponent(document.getElementById('codeEditor').value);
                 document.getElementById("output").innerHTML = "<h1>Loading...</h1>"
                 $.ajax({
-                    url: `/problems/compile/?code=${data}&problem={{ id }}`,
+                    url: `/problems/compile/?code=${data}&problem={{ id }}&token={{ token }}`,
                     type: "get",
                     processData: false,
                     contentType: false,
@@ -76,7 +76,7 @@
                 var data = encodeURIComponent(document.getElementById('codeEditor').value);
                 document.getElementById("output").innerHTML = "<h1>Loading...</h1>"
                 $.ajax({
-                    url: `/problems/compile/?code=${data}&problem={{ id }}`,
+                    url: `/problems/compile/?code=${data}&problem={{ id }}&token={{ token }}`,
                     type: "get",
                     processData: false,
                     contentType: false,

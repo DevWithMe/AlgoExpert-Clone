@@ -6,6 +6,21 @@ from termcolor import colored
 from .models import Code, Passed
 from django.contrib.auth.decorators import login_required
 from api.views import PROBLEMS
+from main.models import Profile
+from django.views.decorators.csrf import csrf_protect
+
+import random
+import string
+
+BASE_URL = "http://127.0.0.1:8000/"
+
+tokens = []
+
+def random_str(digits=70):
+    ans = ""
+    for i in range(digits+1):
+        ans += random.choice(string.ascii_letters + string.digits)
+    return ans
 
 # Create your views here.
 @login_required(redirect_field_name='login')
@@ -14,6 +29,12 @@ def index(request, problem_id):
         PROBLEMS[problem_id-1]
     except IndexError:
         return HttpResponse("Problem doesn't exist")
+    if Profile.objects.get(user_id=request.user.id).paid == "false" and PROBLEMS[problem_id-1]["paid"] == "true":
+        return HttpResponse("Purchase it before accessing this question!")
+
+    token = random_str()
+    tokens.append(token)
+
     try:
         existing_code = Code.objects.get(user_id=request.user.id, problem_id=problem_id)
     except:
@@ -21,18 +42,30 @@ def index(request, problem_id):
             "title": PROBLEMS[problem_id-1]["title"],
             "description": PROBLEMS[problem_id-1]["description"],
             "id": PROBLEMS[problem_id-1]["id"],
-            "starter": PROBLEMS[problem_id-1]["starter"]
+            "starter": PROBLEMS[problem_id-1]["starter"],
+            "token": token
         })
     return render(request, "CodeEditor/index.html", {
         "title": PROBLEMS[problem_id-1]["title"],
         "description": PROBLEMS[problem_id-1]["description"],
         "id": PROBLEMS[problem_id-1]["id"],
-        "exist": existing_code
+        "exist": existing_code,
+        "token": token
     })
 
 
 @login_required(redirect_field_name='login')
 def run_code(request):
+    try:
+        if BASE_URL not in request.META["HTTP_REFERER"]:
+            return HttpResponse("Invalid")
+    except:
+        return HttpResponse("Invalid")
+
+    token = request.GET["token"]
+    if token not in tokens:
+        return JsonResponse(data={"message": "ERROR: Invalid token"})
+
     code = request.GET["code"]
     problem = int(request.GET["problem"])
     try:
@@ -55,7 +88,7 @@ def run_code(request):
     response = {
         "error": {}, # test_# : error message / passed,
         "input": {"1": 2, "2": 9, 3: "random", 4: "random", 5: "random", 6: "random", 7: "random"},
-        "stdout": str(stdout)
+        "stdout": "<br />".join(str(stdout).split("\\n"))
     }
 
 

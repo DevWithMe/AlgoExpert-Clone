@@ -13,8 +13,9 @@
             }
 
             function problem() {
+                console.log("{{ request.session.paid }}")
                 document.getElementById("main").innerHTML = ""
-                fetch("/api/problems")
+                fetch("/api/problems/")
                 .then(response => response.json())
                 .then(problems => {
                     for (let i=0; i<problems.length; i++) {
@@ -23,6 +24,9 @@
                             div.innerHTML = `<a href="/problems/${problems[i]["id"]}/"><h1>${problems[i]["title"]} (completed)</h1></a>`
                         } else {
                             div.innerHTML = `<a href="/problems/${problems[i]["id"]}/"><h1>${problems[i]["title"]}</h1></a>`
+                        }
+                        if (problems[i]["paid"] == "true" && "{{ request.session.paid }}" == "false") {
+                            div.innerHTML = `<h1 style="color: gray">${problems[i]["title"]} (Premium question)</h1>`
                         }
                         document.getElementById("main").appendChild(div);
                     }
@@ -45,6 +49,9 @@
                     <li class="nav-item active">
                         <a class="nav-link" onclick="return problem('problem');" href="#">Problems</a>
                     </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/purchase/" href="#">Purchase</a>
+                    </li>
                 </ul>
                 <!--<a class="nav-link" onclick="displayInfo('problem');" href="">Problems</a>-->
             </div>
@@ -54,6 +61,11 @@
                 <a class="nav-link" href="/logout">Logout</a>
                 <img src="{{ request.session.avator }}" width="50px" height="50px">
                 <p style="margin-left: 5px">Welcome, {{ request.user.username }}</p>
+            {% endif %}
+            {% if request.session.paid == "true" or request.session.paid == "True" and request.user.username %}
+                <p style="margin-left: 5px;">You own AlgoExpert Clone</p>
+            {% elif request.session.paid == "false" or request.session.paid == "False" and request.user.username %}
+                <p style="margin-left: 5px;">You don't own AlgoExpert Clone</p>
             {% endif %}
         </nav>
         <div id="main">

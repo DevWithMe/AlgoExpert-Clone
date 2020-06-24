@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Accept a card payment</title>
+    <meta name="description" content="A demo of a card payment on Stripe" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static "main/global.css" %}" />
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{% static "main/client.js" %}" defer></script>
+  </head>
+
+  <body>
+    <!-- Display a payment form -->
+    <form id="payment-form">
+      <div id="card-element"><!--Stripe.js injects the Card Element--></div>
+      <button id="submit">
+        <div class="spinner hidden" id="spinner"></div>
+        <span id="button-text">Pay</span>
+      </button>
+      <p id="card-errors" role="alert"></p>
+      <p class="result-message hidden">
+        Payment succeeded, Glad to see you to join AlgoExpert Clone! Now you can <a href="/logout/">Logout</a>, then log back in, which you should be able to access premium questions!
+      </p>
+    </form>
+  </body>
+</html>
