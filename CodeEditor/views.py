@@ -56,16 +56,6 @@ def index(request, problem_id):
 
 @login_required(redirect_field_name='login')
 def run_code(request):
-    try:
-        if BASE_URL not in request.META["HTTP_REFERER"]:
-            return HttpResponse("Invalid")
-    except:
-        return HttpResponse("Invalid")
-
-    token = request.GET["token"]
-    if token not in tokens:
-        return JsonResponse(data={"message": "ERROR: Invalid token"})
-
     code = request.GET["code"]
     problem = int(request.GET["problem"])
     try:
