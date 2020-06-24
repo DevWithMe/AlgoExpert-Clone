@@ -54,10 +54,10 @@ def run_code(request):
 
     response = {
         "error": {}, # test_# : error message / passed,
-        "input": {"1": 2, "2": 9, 3: "random", 4: "random", 5: "random", 6: "random", 7: "random"}
+        "input": {"1": 2, "2": 9, 3: "random", 4: "random", 5: "random", 6: "random", 7: "random"},
+        "stdout": str(stdout)
     }
 
-    print(stdout)
 
     for i in range(1, len(data)):
         info = ("<br />".join(data[i].split("\\n")).split("----------------------------------------------------------------------")[1])
@@ -69,19 +69,22 @@ def run_code(request):
         except KeyError:
             response["error"][i] = "passed"
 
-    if b"SyntaxError" in stdout or b"NameError" in stdout:
+    update = False
+    if b"Error" in stdout:
         for i in range(1, 8):
-            response["error"][i] = "SyntaxError/NameError"
+            if response["error"][i] == "passed":
+                response["error"][i] = "Possible Syntax-related Errors, recommend to see raw output for more information"
 
     passed = True
     for i in response["error"]:
         if response["error"][i] != "passed":
             passed = False
 
-    try:
-        exist = Passed.objects.get(user_id=request.user.id, problem_id=problem)
-    except:
-        passed = Passed(user_id=request.user.id, problem_id=problem)
-        passed.save()
+    if passed:
+        try:
+            exist = Passed.objects.get(user_id=request.user.id, problem_id=problem)
+        except:
+            passed = Passed(user_id=request.user.id, problem_id=problem)
+            passed.save()
 
     return JsonResponse(data=response)

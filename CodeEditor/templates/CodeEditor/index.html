@@ -11,9 +11,9 @@
     <div class="row">
         <div class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 85px; overflow-y: auto;">
           <h1>{{ title }}</h1>
-            {{ description }}
+            {{ description|safe }}
         </div>
-        <textarea id="codeEditor" class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto;" name="code">{{ exist.code }}{{ starter }}</textarea>
+        <textarea id="codeEditor" class="col-5" style="height: 100vh; border: 1px solid black; margin-left: 25px; overflow-y: auto; resize: none;" name="code">{{ exist.code }}{{ starter }}</textarea>
       </div>
       <br>
       <button type="button" class="btn btn-success" id="submit-button" style="margin-left: 800px">Submit Code</button>
@@ -21,7 +21,10 @@
       <br>
       <br>
     <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px; overflow-y: auto;" id="output">
-        <h1>Output</h1>
+        <h1>TestCase Output</h1>
+    </div>
+    <div class="row" style="margin-left: 70px; border: 1px solid black; height: 100px; width: 1125px; overflow-y: auto;" id="raw">
+        <h1>Raw Output</h1>
     </div>
     <script>
         $(document).ready(function() {
@@ -47,6 +50,7 @@
                     processData: false,
                     contentType: false,
                     success: function(data) {
+                        document.getElementById("raw").innerHTML = data["stdout"]
                         document.getElementById("output").innerHTML = "<h1>Output</h1>"
                         var errors = data["error"]
                         var input = data["input"]

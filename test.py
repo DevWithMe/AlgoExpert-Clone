@@ -3,6 +3,7 @@ from solution import *
 import random
 import string
 
+
 def correct_fib(n):
 	"""correct implementation for this test"""
 	if n == 2:
@@ -15,7 +16,7 @@ def correct_fib(n):
 def correct_palindrome(string):
 	new_str = ""
 	for i in string:
-		if i.isalpha():
+		if i.isalnum():
 			new_str += (i)
 	return new_str.lower()[::-1] == new_str.lower()
 
@@ -31,10 +32,10 @@ def random_str(n):
 class NthFib(unittest.TestCase):
 	def test_1(self):
 		"""Test for fib when n = 2"""
-		assert 5 == nth_fib(6)
+		assert 1 == nth_fib(2)
 	def test_2(self):
-		"""Test for fib when n = 9"""
-		assert 0 == nth_fib(1)
+		"""Test for fib when n = 6"""
+		assert 5 == nth_fib(6)
 	def test_3(self):
 		num = random_num(15)
 		"""random test 1, expected {num}, actual {nth_fib(num)}"""

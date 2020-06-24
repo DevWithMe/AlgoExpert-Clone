@@ -1,0 +1,6 @@
+Django
+requests
+termcolor
+stripe
+gunicorn
+django-heroku

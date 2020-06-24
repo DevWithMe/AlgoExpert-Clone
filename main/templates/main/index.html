@@ -13,10 +13,10 @@
             }
 
             function problem() {
+                document.getElementById("main").innerHTML = ""
                 fetch("/api/problems")
                 .then(response => response.json())
                 .then(problems => {
-                    console.log(problems);
                     for (let i=0; i<problems.length; i++) {
                         var div = document.createElement('DIV');
                         if (problems[i]["complete"] === "True") {
@@ -24,17 +24,13 @@
                         } else {
                             div.innerHTML = `<a href="/problems/${problems[i]["id"]}/"><h1>${problems[i]["title"]}</h1></a>`
                         }
-                        document.getElementById("main").appendChild(div)
+                        document.getElementById("main").appendChild(div);
                     }
                 })
             }
         </script>
     </head>
     <body>
-        {% if request.user.username is not None %}
-            <h1>Welcome, {{ request.user.username }}</h1>
-            <img src="{{ request.session.avator }}">
-        {% endif %}
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">AlgoExpert Clone</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,8 +48,29 @@
                 </ul>
                 <!--<a class="nav-link" onclick="displayInfo('problem');" href="">Problems</a>-->
             </div>
-            <a class="nav-link" href="/login">Register/Login</a>
+            {% if not request.user.username %}
+                <a class="nav-link" href="/login">Register/Login</a>
+            {% else %}
+                <a class="nav-link" href="/logout">Logout</a>
+                <img src="{{ request.session.avator }}" width="50px" height="50px">
+                <p style="margin-left: 5px">Welcome, {{ request.user.username }}</p>
+            {% endif %}
         </nav>
-        <div id="main"></div>
+        <div id="main">
+            <h1 style="text-align: center;">This is an AlgoExpert Clone!</h1>
+            <p style="text-align: center;">Original Site: <a href="https://algoexpert.io">https://algoexpert.io</a></p>
+            <br>
+            <h2 style="margin-left: 20px;">Features that this clone support: </h2>
+            <ul style="margin-left: 40px;">
+                <li><s>100</s> 2 of the <s>best</s> coding interview questions.</li>
+                <li><s>Comprehensive video explanations.</s> (Well, use YouTube!), But for some question, I will add some video that is considerably good on explaining, but no promise!</li>
+                <li><s>A crash course on data structures.</s>. Well, guess what, we don't have a crash course on data structure.</li>
+                <li>Written code solutions in <s>9</s> 1 (You all better become data scientist so you can learn Python so you can use this platform) language<s>s</s>.</li>
+                <li>A <s>full-fledged</s> minimalistic coding workspace.</li>
+                <li><s>In-depth space-time complexity analyses.</s> Well, try to do analysis on your own because nobody going to help you during coding interview!</li>
+                <li><s>Certificate upon completion of all questions.</s> Nope.</li>
+            </ul>
+            <h2 style="margin-left: 20px;">Want to Learn how to create This AlgoExpert Clone?</h2>
+        </div>
     </body>
 </html>
