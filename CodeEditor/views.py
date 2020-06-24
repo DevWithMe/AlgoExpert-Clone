@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_protect
 import random
 import string
 
-BASE_URL = "http://127.0.0.1:8000/"
+BASE_URL = "https://algoexpertclone.herokuap.com"
 
 tokens = []
 
